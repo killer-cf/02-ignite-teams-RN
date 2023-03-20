@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, View } from 'react-native';
 
 import { GroupCard } from '@components/GroupCard';
 import { Header } from '@components/Header';
 import { Highlight } from '@components/Highlight';
 import * as S from './styles';
 import { ListEmpty } from '@components/ListEmpty';
+import { Button } from '@components/Button';
 
 export function Groups() {
   const [groups, setGroups] = useState(['Galera da Rocketseat', 'Trapaceiros'])
@@ -31,6 +32,8 @@ export function Groups() {
           />
         )}
       />
+
+      <Button title='Criar nova turma' />
     </S.Container>
   );
 }
