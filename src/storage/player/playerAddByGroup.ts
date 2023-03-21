@@ -17,8 +17,6 @@ export async function playerAddByGroup(newPlayer: PlayerStorageDTO, group: strin
       throw new AppError('Essa pessoa ja está adicionada em um time aqui')
     }
 
-    console.log(newPlayer)
-
     const storage = JSON.stringify([...storedPlayers, newPlayer]);
     
     await AsyncStorage.setItem(`${PLAYER_COLLECTION}-${group}`, storage)
