@@ -10,6 +10,7 @@ import { Input } from "@components/Input";
 import { PlayerCard } from "@components/PlayerCard";
 import { ListEmpty } from "@components/ListEmpty";
 import { Button } from "@components/Button";
+import { Loading } from "@components/Loading";
 
 import { Container, Form, HeaderList, NumberOfPlayers } from "./styles";
 import { AppError } from "@utils/AppError";
@@ -24,6 +25,7 @@ type RouteParms = {
 }
 
 export function Players() {
+  const [isLoading, setIsloading] = useState(true)
   const [newPlayerName, setNewPlayerName] = useState('')
   const [team, setTeam] = useState('time a')
   const [players, setPlayers] = useState<PlayerStorageDTO[]>([])
@@ -63,11 +65,16 @@ export function Players() {
 
   async function fetchPlayersByTeam() {
     try {
+      setIsloading(true)
+      
       const playersByTeam = await playersGetByGroupAndTeam(group, team);
       setPlayers(playersByTeam)
+
     } catch (error) {
       console.log(error);
       Alert.alert('Pessoas', 'Não foi possível carregar as pessoas do time selecionado.');
+    } finally {
+      setIsloading(false)
     }
   }
 
@@ -86,15 +93,15 @@ export function Players() {
     try {
       await groupRemoveByName(group)
       natigation.navigate('groups')
-      
+
     } catch (error) {
       console.log(error);
-      Alert.alert('Remover grupo', 'Não foi possível remover o grupo')
+      Alert.alert('Remover grupo', 'Não foi possível remover o turma')
     }
   }
 
   async function handleRemoveGroup() {
-    Alert.alert('Remover turma', 'Deseja remover o grupo?',
+    Alert.alert('Remover turma', 'Deseja remover a turma?',
       [
         { text: 'Não', style: 'cancel' },
         { text: 'Sim', onPress: () => groupRemove()}
@@ -149,7 +156,10 @@ export function Players() {
 
       </HeaderList>  
 
-       <FlatList 
+      {
+        isLoading ? <Loading /> :
+         
+      <FlatList 
         data={players}
         keyExtractor={item => item.name}
         renderItem={({ item }) => (
@@ -164,6 +174,7 @@ export function Players() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[{ paddingBottom: 100 }, players.length === 0 && { flex: 1 }]}
       /> 
+      }
 
       <Button 
         title="Remover Turma"
